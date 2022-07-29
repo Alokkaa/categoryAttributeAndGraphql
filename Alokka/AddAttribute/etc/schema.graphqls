@@ -1,0 +1,15 @@
+type Query {
+
+    get_custom_attribute(
+
+    category_attribute_code: String! @doc(description: "category attribute code.")
+
+    ): customAttributeData @resolver( class: "Alokka\\AddAttribute\\Model\\Resolver\\AddAttributeGraphql") @doc(description: "Get list of reviews for the given product id.")
+
+}
+
+type customAttributeData {
+    id : Int  @doc(description: "Primary Id"),
+    attribute_code : String  @doc(description: "attribute code"),
+    title : String  @doc(description: "title")
+}
