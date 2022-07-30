@@ -1,11 +1,16 @@
 type Query {
+    get_attribute_value(
+    category_id: Int! @doc(description: "category attribute id.")
+    category_attribute_code: String! @doc(description: "category attribute code.")
+    ): attributeValueData @resolver( class: "Alokka\\AddAttribute\\Model\\Resolver\\FetchAttributeValueGraphql") @doc(description: "Fetch Attribute Graphql.")
 
     get_custom_attribute(
-
     category_attribute_code: String! @doc(description: "category attribute code.")
+    ): customAttributeData @resolver( class: "Alokka\\AddAttribute\\Model\\Resolver\\RetrieveAttributeGraphql") @doc(description: "Retrieve Attribute Graphql.")
+}
 
-    ): customAttributeData @resolver( class: "Alokka\\AddAttribute\\Model\\Resolver\\AddAttributeGraphql") @doc(description: "Get list of reviews for the given product id.")
-
+type attributeValueData {
+    attribute_value : String  @doc(description: "attribute code"),
 }
 
 type customAttributeData {
