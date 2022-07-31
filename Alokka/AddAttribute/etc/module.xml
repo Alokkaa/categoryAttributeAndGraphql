@@ -3,6 +3,7 @@
     <module name="Alokka_AddAttribute" setup_version="1.0.0">
         <sequence>
             <module name="Magento_Catalog"/>
+            <module name="Magento_Backend"/>
             <module name="Magento_GraphQl"/>
         </sequence>
     </module>

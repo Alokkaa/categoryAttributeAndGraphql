@@ -1,45 +1,40 @@
 <?php
 namespace Alokka\AddAttribute\Setup;
 
+use Magento\Framework\Module\Setup\Migration;
 use Magento\Framework\Setup\InstallDataInterface;
 use Magento\Framework\Setup\ModuleContextInterface;
 use Magento\Framework\Setup\ModuleDataSetupInterface;
-use Magento\Eav\Setup\EavSetupFactory;
+use Magento\Catalog\Setup\CategorySetupFactory;
 
 class InstallData implements InstallDataInterface
 {
-
-    private $eavSetupFactory;
-
-    public function __construct(EavSetupFactory $eavSetupFactory)
+    public function __construct(CategorySetupFactory $categorySetupFactory)
     {
-        $this->eavSetupFactory = $eavSetupFactory;
+        $this->categorySetupFactory = $categorySetupFactory;
     }
-
-    public function install(
-        ModuleDataSetupInterface $setup,
-        ModuleContextInterface $context
-    )
+    public function install(ModuleDataSetupInterface $setup, ModuleContextInterface $context)
     {
-        $eavSetup = $this->eavSetupFactory->create(['setup' => $setup]);
+        $installer = $setup;
+        $installer->startSetup();
 
-        $eavSetup->addAttribute(
-            \Magento\Catalog\Model\Category::ENTITY,
-            'category_mobile_image',
-            [
-                'type'         => 'varchar',
-                'label'        => 'category Mobile image',
-                'input'        => 'text',
-                'sort_order'   => 100,
-                'source'       => '',
-                'global'       => 1,
-                'visible'      => true,
-                'required'     => false,
-                'user_defined' => false,
-                'default'      => null,
-                'group'        => '',
-                'backend'      => ''
+        $categorySetup = $this->categorySetupFactory->create(['setup' => $setup]);
+        $entityTypeId = $categorySetup->getEntityTypeId(\Magento\Catalog\Model\Category::ENTITY);
+        $attributeSetId = $categorySetup->getDefaultAttributeSetId($entityTypeId);
+        $categorySetup->removeAttribute(
+            \Magento\Catalog\Model\Category::ENTITY, 'category_mobile_image' );
+        $categorySetup->addAttribute(
+            \Magento\Catalog\Model\Category::ENTITY, 'category_mobile_image', [
+                'type' => 'varchar',
+                'label' => 'Category Mobile Image',
+                'input' => 'image',
+                'backend' => 'Magento\Catalog\Model\Category\Attribute\Backend\Image',
+                'required' => false,
+                'sort_order' => 5,
+                'global' => \Magento\Eav\Model\Entity\Attribute\ScopedAttributeInterface::SCOPE_STORE,
+                'group' => 'General Information',
             ]
         );
+        $installer->endSetup();
     }
 }
